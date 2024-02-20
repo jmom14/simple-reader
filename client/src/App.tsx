@@ -1,25 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, Outlet } from "react-router-dom";
+import Navigation from './components/Navigation';
+import Upload from './pages/Upload';
+import Library from './pages/Library';
+import Account from './pages/Account';
+import Reader from './pages/Reader';
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Routes>
+      <Route path="/" element={ <Navigation />}>
+        <Route path="reader/:id" element={ <Reader />} />
+        <Route path="upload" element={<Upload />} />
+        <Route path="library" element={<Library />} />
+        <Route path="account" element={<Account />} />
+      </Route>
+    </Routes>
+    </>
   );
 }
 

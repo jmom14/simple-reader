@@ -48,7 +48,7 @@ function Library() {
     fetchBooks();
   }, []);
 
-  console.log(files)
+  console.log(files);
 
   return (
     <Wrapper>
