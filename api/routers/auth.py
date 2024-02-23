@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
-from utils.auth import User, get_current_active_user, ACCESS_TOKEN_EXPIRE_MINUTES, authenticate_user, create_access_token, fake_users_db
-from fastapi import Depends, FastAPI, HTTPException, status
+from utils.auth import ACCESS_TOKEN_EXPIRE_MINUTES, authenticate_user, create_access_token, fake_users_db
+from fastapi import Depends, HTTPException, status
 from schemas.auth import Token
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 from typing import Annotated
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 import os 
 
 

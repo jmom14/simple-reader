@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from typing import Annotated, Union
-from utils.auth import User, get_current_active_user, ACCESS_TOKEN_EXPIRE_MINUTES, authenticate_user, create_access_token, fake_users_db
+from typing import Annotated
+from utils.auth import User, get_current_active_user
 
 router = APIRouter(
     prefix="/api/users",

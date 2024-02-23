@@ -3,7 +3,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from typing import Annotated, Union
 from jose import JWTError, jwt
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, HTTPException, status
 from pydantic import BaseModel
 from schemas.auth import TokenData
 
