@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:$ecret@postgres:5432/postgres
+
+  db:
+    image: postgres
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: $ecret@
+
+volumes:
+  postgres_db:
+    driver: local
