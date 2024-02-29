@@ -11,6 +11,6 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     first_name = Column(String)
     last_name = Column(String)
-    disabled: Union[bool, None] = None
+    is_disabled: Union[bool, None] = None
 
 
