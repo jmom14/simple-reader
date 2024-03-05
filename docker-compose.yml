@@ -11,8 +11,8 @@ services:
       - ./api/:/app
     depends_on:
       - db
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+    env_file:
+      - ./api/.env
 
   db:
     image: postgres:latest

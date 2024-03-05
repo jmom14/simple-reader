@@ -1,18 +1,21 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 from typing import Union
 
 
 class User(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
     id: int
     email: str
-    first_name: str
-    last_name: str
-    is_disabled: bool
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
+    is_disabled: bool 
+
+    class Config:
+        from_attributes = True
 
 class UserPrivate(User):
-    hashed_password: str
+    password: str
 
 
 class UserCreate(BaseModel):
-    pass
+    email: str
+    password: str

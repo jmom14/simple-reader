@@ -1,11 +1,14 @@
 from fastapi import APIRouter, Depends
-from utils.auth import ACCESS_TOKEN_EXPIRE_MINUTES, authenticate_user, create_access_token, fake_users_db
+from utils.auth import authenticate_user, create_access_token
 from fastapi import Depends, HTTPException, status
 from schemas.auth import Token
 from datetime import timedelta
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
-import os 
+from database import get_db
+from sqlalchemy.orm import Session
+
+import os
 
 
 AUTH_URL = os.environ.get('AUTH_URL')
@@ -14,6 +17,8 @@ REDIRECT_URI = os.environ.get('REDIRECT_URI')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 TOKEN_URL = os.environ.get('TOKEN_URL')
 USERINFO_URL = os.environ.get('USERINFO_URL')
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get('AUTH_ACCESS_TOKEN_EXPIRE_MINUTES'))
+
 
 router = APIRouter(
     prefix="/api/auth",
@@ -21,18 +26,21 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.post("/token")
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: Session = Depends(get_db)
+) -> Token:
+    user = authenticate_user(db=db, email=form_data.username, password=form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")
 
 
