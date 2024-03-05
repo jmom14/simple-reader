@@ -8,7 +8,9 @@ from fastapi.security import OAuth2PasswordRequestForm
 from database import get_db
 from sqlalchemy.orm import Session
 
+import schemas
 import os
+import services
 
 
 AUTH_URL = os.environ.get('AUTH_URL')
@@ -27,7 +29,7 @@ router = APIRouter(
 )
 
 
-@router.post("/token")
+@router.post("/login")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db)
@@ -42,6 +44,15 @@ async def login_for_access_token(
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")
+
+
+@router.post("/signup", response_model=schemas.User)
+def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = services.get_user_by_email(db=db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    return services.create_user(db=db, user=user)
 
 
 # @app.get("/login")

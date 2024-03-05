@@ -11,7 +11,7 @@ import os
 import schemas 
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 SECRET_KEY = os.environ.get('AUTH_SECRET_KEY')
 ALGORITHM = os.environ.get('AUTH_ALGORITHM')
@@ -25,15 +25,8 @@ def create_user(db: Session, user: schemas.User):
     return new_user
 
 
-def get_user(db, email: str):
-    if email in db:
-        user_dict = db[email]
-        return schemas.UserPrivate(**user_dict)
-
-
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
-
 
 
 def get_users(db: Session):

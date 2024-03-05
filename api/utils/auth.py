@@ -2,7 +2,6 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from typing import Union
 from jose import jwt
-from schemas.user import UserPrivate
 from sqlalchemy.orm import Session
 
 import os
@@ -21,12 +20,6 @@ def verify_password(plain_password, hashed_password):
 
 def get_password_hash(password):
     return pwd_context.hash(password)
-
-
-def get_user(db, email: str):
-    if email in db:
-        user_dict = db[email]
-        return UserPrivate(**user_dict)
 
 
 def authenticate_user(db: Session, email: str, password: str):
