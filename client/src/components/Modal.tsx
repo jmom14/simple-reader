@@ -17,6 +17,7 @@ const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 `;
 
 const ModalContainer = styled.div`
@@ -24,8 +25,6 @@ const ModalContainer = styled.div`
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  height: 250px;
-  min-height: 250px;
   margin-top: 100px;
 `;
 
@@ -42,7 +41,7 @@ const CloseButton = styled.button`
 `;
 
 const Content = styled.div`
-  height: 100%;
+  width: auto;
 `;
 
 const Modal : FC<ModalProps> = ({ isOpen, onClose, children }) => {

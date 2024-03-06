@@ -3,9 +3,7 @@ import styled from 'styled-components';
 import Dropzone from 'react-dropzone'
 import { IoCloudUploadOutline } from "react-icons/io5";
 import Button from '@mui/material/Button';
-import { S3 } from 'aws-sdk';
-import awsConfig from '../config/aws';
-import { AWS_BOOKS_OBJECT, AWS_SIMPLE_READER_BUCKET, File } from '../constants';
+import { File } from '../constants';
 import { MdCancel } from "react-icons/md";
 
 
@@ -70,21 +68,7 @@ function Upload() {
     if(!file){
       return;
     }
-
-    const s3 = new S3(awsConfig);
-
-    const params = {
-      Bucket: AWS_SIMPLE_READER_BUCKET,
-      Key: `${AWS_BOOKS_OBJECT}/${file.name}`,
-      Body: file,
-    };
-
-    try {
-      const data = await s3.upload(params).promise();
-      console.log('File uploaded successfully:', data.Location);
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    }
+  // code goes here
   }
 
   const handleCancelClick = (e: any) => {
