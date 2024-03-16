@@ -4,3 +4,9 @@ export interface File {
   size: number,
   type: string,
 }
+
+export interface User {
+  email: string,
+  firstName: string | null,
+  lastName: string | null,
+}

@@ -4,6 +4,11 @@ import TextField from '@mui/material/TextField';
 import  { useFormik } from 'formik';
 import Button from '@mui/material/Button';
 import { signupValidationSchema } from '../utils/validation';
+import { useSignupMutation } from '../app/services/auth';
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
+import { setCredentials } from '../features/auth/authSlice';
+import Loading from './Loading';
 
 const initialValues = {
   email: "",
@@ -12,25 +17,33 @@ const initialValues = {
 };
 
 interface SignupProps {
-  onLoginClick: () => void
+  onLoginClick: () => void,
+  onClose: () => void,
 }
 
 function Signup(props: SignupProps) {
-  const { onLoginClick } = props;
+  const [signup, { isLoading}] = useSignupMutation();
+  const { onLoginClick, onClose } = props;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onSubmit = async (formValue: any) => {
+    try {
+      const { email, password } = formValue;
+      const user = await signup({ email, password }).unwrap();
+      dispatch(setCredentials(user));
+      onClose();
+      navigate('/library');
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  };
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: signupValidationSchema,
     validateOnChange: false,
-    onSubmit: async (formValue) => {
-      try {
-        console.log('signup...')
-          // formValue.email,
-          // formValue.password        
-      } catch (error) {
-        console.log('error: ', error)
-      }
-    }
+    onSubmit,
   });
 
   const handleSignup = () => {
@@ -71,7 +84,8 @@ function Signup(props: SignupProps) {
           onClick={handleSignup}
           style={{ marginTop: '10px'}}
         >
-          Sign up
+          {isLoading ? <Loading /> : 'Sign up'}
+          
         </Button>
         <Footer>
           <span>Already have an account?</span>

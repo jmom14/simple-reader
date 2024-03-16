@@ -11,7 +11,7 @@ const BooksContainer = styled.div`
   gap: 20px;
   align-items: flex-start;
   justify-content: center;
-  padding: 0 30px;
+  padding: 0 50px;
 `;
 
 const Title = styled.h1`
@@ -48,7 +48,7 @@ function Library() {
     fetchBooks();
   }, []);
 
-  console.log(files);
+  // console.log(files);
 
   return (
     <Wrapper>

@@ -5,6 +5,11 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { useFormik } from "formik";
 import { loginValidationSchema } from '../utils/validation';
+import { useLoginMutation } from '../app/services/auth';
+import { useDispatch } from 'react-redux'
+import { setCredentials } from '../features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
+import Loading from './Loading';
 
 
 const initialValues = {
@@ -40,22 +45,27 @@ const ForgotPassword = styled(Link)`
 
 interface LoginProps {
   onSignupClick: () => void,
+  onClose: () => void,
 }
 
 const Login = (props: LoginProps) => {
-  const { onSignupClick } = props;
+  const { onSignupClick, onClose } = props;
+  const [login, { isLoading}] = useLoginMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // const handleSocialAuth = () => {
   //   window.location.href = 'http://localhost:8000/login';
   // };
 
   const onSubmit = async (formValue: any) => {
-    //   formValue.email,
-    //   formValue.password,
     try {
-      console.log('onSubmit...')
+      const user = await login({ username: formValue.email, password: formValue.password }).unwrap();
+      dispatch(setCredentials(user));
+      navigate('/library');
+      onClose();
     } catch (error) {
-      console.log(error)
+      console.log('error: ', error)
     }
   };
 
@@ -67,13 +77,12 @@ const Login = (props: LoginProps) => {
   })
 
   const handleLogin = () => {
-    console.log(formik)
     formik.handleSubmit();
   }
+
   return (
     <Content>
       <Title>Login to your account</Title>
-
       <TextField 
         id="email" 
         label="Email" 
@@ -97,7 +106,7 @@ const Login = (props: LoginProps) => {
         onClick={handleLogin}
         style={{ marginTop: '10px'}}
       >
-        Login
+        {isLoading ? <Loading /> : 'Login'}
       </Button>
 
       <ForgotPassword to="#">Forgot password?</ForgotPassword>

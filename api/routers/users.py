@@ -15,11 +15,11 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[schemas.User])
-def get_users(db: Session = Depends(get_db)):
+async def get_users(db: Session = Depends(get_db)):
 
     return services.get_users(db=db)
 
 
 @router.get("/me/", response_model=schemas.User)
-async def read_users_me(current_user: Annotated[schemas.User, Depends(services.get_current_active_user)]):
-    return current_user
+async def me(user: Annotated[schemas.User, Depends(services.get_current_active_user)]):
+    return user
