@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { RootState } from '../store'
+import { RootState } from '../store';
+import { removeCredentials } from '../../features/auth/authSlice';
 
 export interface User {
   first_name: string
@@ -18,17 +19,28 @@ export interface LoginRequest {
 
 const HOST = process.env.REACT_APP_HOST;
 
-export const api = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${HOST}/api/auth/`,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token;
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
+const baseQuery = fetchBaseQuery({
+  baseUrl: `${HOST}/api/auth/`,
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as RootState).auth.token;
+    if (token) {
+      headers.set('authorization', `Bearer ${token}`)
+    }
+    return headers;
+  },
+});
+
+export const baseQueryInterceptor = async (args: any, api: any, extraOptions: any) => {
+  let result = await baseQuery(args, api, extraOptions)
+  if (result.error && result.error.status === 401) {
+    api.dispatch(removeCredentials());
+  }
+  return result;
+}
+
+export const authApi = createApi({
+  reducerPath: 'authAPI',
+  baseQuery: baseQueryInterceptor,
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (request) => {
@@ -57,18 +69,10 @@ export const api = createApi({
         }
       }
     }),
-    logout: builder.mutation<any, any>({
-      query: () => {
-        return {
-          url: 'logout',
-          method: 'POST',
-        }
-      }
-    }),
     protected: builder.mutation<{ message: string }, void>({
       query: () => 'protected',
     }),
   }),
 })
 
-export const { useLoginMutation, useSignupMutation, useProtectedMutation } = api;
+export const { useLoginMutation, useSignupMutation, useProtectedMutation } = authApi;

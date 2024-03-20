@@ -31,7 +31,24 @@ router = APIRouter(
 def get_token(email: str):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     token = create_access_token(data={"sub": email}, expires_delta=access_token_expires)
-    return Token(token=token, token_type="bearer")
+    return Token(access_token=token, token_type="bearer")
+
+
+@router.post("/token")
+async def login_for_access_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: Session = Depends(get_db)
+):
+    user = authenticate_user(db=db, email=form_data.username, password=form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return get_token(user.email)
+
+
 @router.post("/login")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -45,7 +62,7 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     token = get_token(user.email)
-    return {'token': token.token, 'user': user}
+    return {'token': token.access_token, 'user': user}
 
 
 @router.post("/signup")
@@ -57,8 +74,6 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     token = get_token(new_user.email)
     return {'token': token.token, 'user': new_user}
 
-def logout(user: Annotated[schemas.User, Depends(services.get_current_active_user)]):
-    pass
 
 
 # @app.get("/login")

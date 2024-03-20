@@ -11,7 +11,7 @@ import os
 import schemas 
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 SECRET_KEY = os.environ.get('AUTH_SECRET_KEY')
 ALGORITHM = os.environ.get('AUTH_ALGORITHM')
@@ -27,6 +27,10 @@ def create_user(db: Session, user: schemas.User):
 
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
+
+
+def get_user_by_id(db: Session, id: str):
+    return db.query(User).filter(User.id == id).first()
 
 
 def get_users(db: Session):
@@ -57,3 +61,16 @@ async def get_current_active_user(current_user: Annotated[User, Depends(get_curr
     if current_user.is_disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+
+async def update_user(db, db_user, user_update):
+    attr_to_update = ['first_name', 'last_name']
+
+    for key, value in user_update.items():
+            if key in attr_to_update:
+                setattr(db_user, key, value)
+    
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
