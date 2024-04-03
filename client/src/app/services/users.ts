@@ -17,7 +17,7 @@ const baseQuery = fetchBaseQuery({
 });
 
 export const baseQueryInterceptor = async (args: any, api: any, extraOptions: any) => {
-  let result = await baseQuery(args, api, extraOptions)
+  let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 401) {
     api.dispatch(removeCredentials());
   }

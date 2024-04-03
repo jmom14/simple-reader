@@ -50,7 +50,7 @@ async def login_for_access_token(
 
 
 @router.post("/login")
-async def login_for_access_token(
+async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db)
 ):
@@ -72,7 +72,7 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
     new_user = services.create_user(db=db, user=user)
     token = get_token(new_user.email)
-    return {'token': token.token, 'user': new_user}
+    return {'token': token.access_token, 'user': new_user}
 
 
 
