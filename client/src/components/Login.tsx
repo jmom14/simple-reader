@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import { Link } from 'react-router-dom';
 import { useFormik } from "formik";
 import { loginValidationSchema } from '../utils/validation';
@@ -50,6 +51,7 @@ interface LoginProps {
 
 const Login = (props: LoginProps) => {
   const { onSignupClick, onClose } = props;
+  const [loginError, setLoginError] = useState("");
   const [login, { isLoading}] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -64,8 +66,11 @@ const Login = (props: LoginProps) => {
       dispatch(setCredentials(user));
       navigate('/library');
       onClose();
-    } catch (error) {
-      console.log('error: ', error)
+    } catch (error: any) {
+      const { data } = error;
+      if (data && data.detail){
+        setLoginError(data.detail);
+      }
     }
   };
 
@@ -83,6 +88,7 @@ const Login = (props: LoginProps) => {
   return (
     <Content>
       <Title>Login to your account</Title>
+      {loginError && <Alert severity="error">{loginError}</Alert>}
       <TextField 
         id="email" 
         label="Email" 
