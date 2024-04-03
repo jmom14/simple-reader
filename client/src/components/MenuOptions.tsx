@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-// import Icon from './Icon';
 
 type ItemComponent<T> = React.FunctionComponent<T>;
 type MenuOptionsComponent<T, Q> = React.FunctionComponent<T> & { Item: ItemComponent<Q> };
@@ -13,7 +12,7 @@ interface MenuOptionsProps {
 
 interface ItemProps {
   children: React.ReactNode,
-  icon?: string,
+  icon?: React.ReactNode,
   onClick?: React.MouseEventHandler<HTMLLIElement>,
   className?: string,
   active?: boolean,
@@ -38,12 +37,12 @@ const MenuOptionItem = styled.li < ItemProps > `
 
 const MenuOptionItemIcon = styled.div`
   border-radius: 50%;
-  background-color: #f6f9fa;
   padding: 10px;
   margin-right: 10px;
-  display:block;
-  width: 20px;
-  height: 20px;
+  display: grid;
+  place-content: center;
+  width: 12px;
+  height: 12px;
 `;
 
 const MenuOptionList = styled.ul`
@@ -83,7 +82,7 @@ const Item: ItemComponent<ItemProps> = (props: ItemProps) => {
     <MenuOptionItem onClick={onClick} aria-hidden="true" className={className} active={active}>
       {icon && (
         <MenuOptionItemIcon>
-          {/* <Icon icon={icon} size={20} /> */}
+          {icon}
         </MenuOptionItemIcon>
       )}
       {children}

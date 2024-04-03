@@ -12,6 +12,8 @@ import Popover from './Popover';
 import MenuOptions from './MenuOptions';
 import { removeCredentials } from '../features/auth/authSlice';
 import { useDispatch } from 'react-redux';
+import { IoMdSettings } from "react-icons/io";
+import { IoLogInOutline } from "react-icons/io5";
 
 const Wrapper = styled.div`
   position: relative;
@@ -88,9 +90,9 @@ function Navigation() {
     <AvatarPopover>
       <AvatarUsername>{`Hi, User`}</AvatarUsername>
       <MenuOptions>
-        <MenuOptions.Item icon="user" onClick={() => navigate('/account')}>My Account</MenuOptions.Item>
-        <MenuOptions.Item icon="gear" onClick={() => navigate('/account')}>Settings</MenuOptions.Item>
-        <MenuOptions.Item icon="exit" onClick={handleLogout}>Sign out</MenuOptions.Item>
+        <MenuOptions.Item icon={<MdAccountCircle size={30}/>} onClick={() => navigate('/account')}>My Account</MenuOptions.Item>
+        <MenuOptions.Item icon={<IoMdSettings size={30} />} onClick={() => navigate('/account')}>Settings</MenuOptions.Item>
+        <MenuOptions.Item icon={<IoLogInOutline size={30} />} onClick={handleLogout}>Sign out</MenuOptions.Item>
       </MenuOptions>
     </AvatarPopover>
   );
