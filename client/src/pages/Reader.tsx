@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
-// import { useParams } from 'react-router-dom';
 import EpubReader from '../components/EpubReader';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 
 const Wrapper = styled.div`
   height: calc(100vh - 70px);
@@ -10,8 +10,10 @@ const Wrapper = styled.div`
 `;
 
 export default function Reader() {
-  // const [book, setBook] = useState<any>()
   const [percentage, setPercentage] = useState(0);
+  const location = useLocation();
+// TODO: Change to get file via props
+  const { file } = location.state;
   
   const onLocationChanged = async (newStartCfi: string, percentage: number) => {
     console.log('percentage: ', percentage)
@@ -25,14 +27,9 @@ export default function Reader() {
     setPercentage(currentPercentage);
   }, []);
   
-  // let { id } = useParams();
-
-  // useEffect(() => {
-  //   const fetchBook = async () => {
-
-  //   };
-  //   fetchBook();
-  // }, []);
+  if(!file){
+    return <div>Error loading epub</div>
+  }
 
   return (
     <Wrapper>
@@ -40,7 +37,7 @@ export default function Reader() {
         percentage={percentage}
         onLocationsGenerated={onReaderLocationsGenerated}
         onLocationChanged={onLocationChanged}
-        bookPath="https://simple-reader.s3.us-west-1.amazonaws.com/books/pg72748.epub"
+        bookPath={file}
       />
     </Wrapper>
   )

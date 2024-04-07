@@ -5,6 +5,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import Button from '@mui/material/Button';
 import { File } from '../constants';
 import { MdCancel } from "react-icons/md";
+import { useCreateReadingMutation } from '../app/services/readings';
 
 
 const Wrapper = styled.div`
@@ -59,6 +60,7 @@ const Title = styled.h1`
 
 function Upload() {
   const [file, setFile] = useState<File | null>(null);
+  const [ createReading ] = useCreateReadingMutation();
   
   const handleDrop = (acceptedFiles: any) => { 
     setFile(acceptedFiles[0]);
@@ -68,7 +70,11 @@ function Upload() {
     if(!file){
       return;
     }
-  // code goes here
+    const reading = {
+      title: "Fake title",
+      author: "Fake author"
+    }
+    createReading({file, reading});
   }
 
   const handleCancelClick = (e: any) => {

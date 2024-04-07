@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface CoverProps {
-  name: string,
+  reading: any,
 }
 
-const StyledLink = styled(Link)`
+const StyledLink = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -37,8 +37,13 @@ const Square = styled.div`
   color: white;
 `;
 
+const Author = styled.div`
+  font-weight: 300;
+`;
+
 function Cover(props: CoverProps) {
-  const { name } = props;
+  const { id, title, author, file } = props.reading;
+  const navigate = useNavigate();
   
   function generateTexture() {
     const colors = ['#3a1cb0', '#0000ff', '#270e8a', '#3715bf', '#1a085e', '#9d9cff'];
@@ -53,15 +58,25 @@ function Cover(props: CoverProps) {
   }
 
   const texture = generateTexture();
+
+  const handleGoToReader = (e: any) => {
+    e.stopPropagation()
+    navigate(`/reader/${id}`, {
+      state: {
+        file: file,
+      }
+    })
+  }
   
   return (
-    <StyledLink to={`/reader/${name}`}>
+    <StyledLink onClick={handleGoToReader}>
       <CoverWrapper texture={texture}>
         <Square>
           Book
         </Square>
         </CoverWrapper>
-        {name || "Unkown"}
+        {title || "Unkown"}
+        <Author>{author}</Author>
     </StyledLink>
   )
 }

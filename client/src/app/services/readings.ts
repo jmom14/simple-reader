@@ -2,11 +2,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
 import { removeCredentials } from '../../features/auth/authSlice';
 
-
 const HOST = process.env.REACT_APP_HOST;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${HOST}/api/users/`,
+  baseUrl: `${HOST}/api/readings/`,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
     if (token) {
@@ -24,24 +23,25 @@ export const baseQueryInterceptor = async (args: any, api: any, extraOptions: an
   return result;
 };
 
-export const usersApi = createApi({
-  reducerPath: 'usersAPI',
+export const readingsApi = createApi({
+  reducerPath: 'readingsAPI',
   baseQuery: baseQueryInterceptor,
   endpoints: (builder) => ({
-    getUser: builder.query<any, void>({
-      query: () => '/me/',
-    }),
-    updateUser: builder.mutation<any, any>({
-      query: (request) => {
-        const { id, data } = request;
+    createReading: builder.mutation<any, any>({
+      query: ({ file,reading }) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("reading", JSON.stringify(reading));
         return {
-          url: `${id}/`,
-          method: 'PUT',
-          body: data,
+          method: 'POST',
+          body: formData
         }
       }
+    }),
+    fetchReadings: builder.query<any, void>({
+      query: () => '/',
     })
   })
 });
 
-export const { useGetUserQuery, useUpdateUserMutation } = usersApi;
+export const { useCreateReadingMutation, useFetchReadingsQuery } = readingsApi;
