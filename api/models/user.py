@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from database import Base
 from sqlalchemy.sql import func
-# from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship
 
 
 class User(Base):
@@ -16,9 +16,4 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-# readings = relationship("Reading", back_populates="user")
-
-# add autoincrement
-# make first_name nullable
-# make last_name nullable
-# set is disabled to true
+    readings = relationship("Reading", back_populates="user")

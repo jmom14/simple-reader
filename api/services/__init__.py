@@ -8,5 +8,6 @@ from .user import \
 
 
 from .reading import \
-upload_epub, \
-create_reading
+upload_reading, \
+create_reading, \
+get_readings
