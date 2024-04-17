@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True, unique=True)
     password = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True, index=True)
     first_name = Column(String, nullable=True)
@@ -17,3 +17,4 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     readings = relationship("Reading", back_populates="user")
+    highlights = relationship("Highlight", back_populates="user")

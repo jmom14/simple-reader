@@ -10,7 +10,6 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
-from models import HashIdField
 import os
 
 # revision identifiers, used by Alembic.
@@ -23,8 +22,8 @@ SALT = os.environ.get("HAS_ID_FIELD_SALT")
 
 
 def upgrade() -> None:
-    op.create_table('reading',
-        sa.Column('id', sa.Integer(), primary_key=True, index=True, autoincrement=True),
+    op.create_table('readings',
+        sa.Column('id', sa.Integer(), primary_key=True, index=True, autoincrement=True, unique=True),
         sa.Column('title', sa.String(), nullable=True),
         sa.Column('author', sa.String(), nullable=True),
         sa.Column('cover_image_file', sa.String(), nullable=True),
@@ -33,8 +32,7 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
-   
 
 
 def downgrade() -> None:
-    op.drop_table('reading')
+    op.drop_table('readings')

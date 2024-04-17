@@ -5,9 +5,9 @@ import os
 
 
 class Reading(Base):
-    __tablename__ = 'reading'
+    __tablename__ = 'readings'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, unique=True, autoincrement=True)
     title = Column(String)
     author = Column(String)
     cover_image_file = Column(String, nullable=True)
@@ -16,3 +16,4 @@ class Reading(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="readings")
 
+    highlights = relationship("Highlight", back_populates="readings")
