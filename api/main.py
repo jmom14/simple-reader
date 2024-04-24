@@ -16,6 +16,7 @@ origins = [
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:3000",
+    "https://epubs-simple-reader.netlify.app/",
 ]
 
 app.add_middleware(
