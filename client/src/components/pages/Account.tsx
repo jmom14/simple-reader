@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import useIsAuthenticated from '../hooks/isAutheticated';
-import { useGetUserQuery, useUpdateUserMutation } from '../app/services/users';
-import Loading from '../components/Loading';
+import useIsAuthenticated from '../../hooks/isAutheticated';
+import { useGetUserQuery, useUpdateUserMutation } from '../../app/services/users';
+import Loading from '../Loading';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';

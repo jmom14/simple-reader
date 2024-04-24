@@ -11,3 +11,11 @@ from .reading import \
 upload_reading, \
 create_reading, \
 get_readings
+
+from .highlight import \
+create_highlight, \
+get_highlights
+
+from .note import \
+create_note, \
+get_notes

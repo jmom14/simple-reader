@@ -3,7 +3,7 @@ import { RootState } from '../store';
 import { HOST, baseQueryInterceptor } from './interceptor';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${HOST}/api/readings/`,
+  baseUrl: `${HOST}/api/notes/`,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
     if (token) {
@@ -13,23 +13,20 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-export const readingsApi = createApi({
-  reducerPath: 'readingsAPI',
+export const notesApi = createApi({
+  reducerPath: 'notesAPI',
   baseQuery: (args, api, extra) =>  baseQueryInterceptor(args, api, extra, baseQuery),
   endpoints: (builder) => ({
-    fetchReadings: builder.query<any, void>({ query: () => '/' }),
-    createReading: builder.mutation<any, any>({
-      query: ({ file,reading }) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("reading", reading);
+    getNotes: builder.query<any, any>({ query: (readingId: any) => `${readingId}/`}),
+    creteaNote: builder.mutation<any, any>({
+      query: (request) => {
         return {
           method: 'POST',
-          body: formData
+          body: request,
         }
       }
     }),
-  })
+  }),
 });
 
-export const { useCreateReadingMutation, useFetchReadingsQuery } = readingsApi;
+export const { useCreteaNoteMutation, useGetNotesQuery } = notesApi;

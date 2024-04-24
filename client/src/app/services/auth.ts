@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RootState } from '../store';
-import { removeCredentials } from '../../features/auth/authSlice';
+import { HOST, baseQueryInterceptor } from './interceptor';
 
 export interface User {
   first_name: string
@@ -17,7 +17,7 @@ export interface LoginRequest {
   password: string
 }
 
-const HOST = process.env.REACT_APP_HOST;
+
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${HOST}/api/auth/`,
@@ -30,17 +30,9 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-export const baseQueryInterceptor = async (args: any, api: any, extraOptions: any) => {
-  let result = await baseQuery(args, api, extraOptions)
-  if (result.error && result.error.status === 401) {
-    api.dispatch(removeCredentials());
-  }
-  return result;
-}
-
 export const authApi = createApi({
   reducerPath: 'authAPI',
-  baseQuery: baseQueryInterceptor,
+  baseQuery: (args, api, extra) =>  baseQueryInterceptor(args, api, extra, baseQuery),
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (request) => {

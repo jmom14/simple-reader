@@ -1,9 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
-import { removeCredentials } from '../../features/auth/authSlice';
-
-
-const HOST = process.env.REACT_APP_HOST;
+import { HOST, baseQueryInterceptor } from './interceptor';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${HOST}/api/users/`,
@@ -16,17 +13,9 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-export const baseQueryInterceptor = async (args: any, api: any, extraOptions: any) => {
-  let result = await baseQuery(args, api, extraOptions);
-  if (result.error && result.error.status === 401) {
-    api.dispatch(removeCredentials());
-  }
-  return result;
-};
-
 export const usersApi = createApi({
   reducerPath: 'usersAPI',
-  baseQuery: baseQueryInterceptor,
+  baseQuery: (args, api, extra) =>  baseQueryInterceptor(args, api, extra, baseQuery),
   endpoints: (builder) => ({
     getUser: builder.query<any, void>({
       query: () => '/me/',

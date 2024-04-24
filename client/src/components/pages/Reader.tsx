@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import EpubReader from '../components/EpubReader';
+import EpubReader from '../EpubReader';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 
@@ -16,7 +16,6 @@ export default function Reader() {
   const { file } = location.state;
   
   const onLocationChanged = async (newStartCfi: string, percentage: number) => {
-    console.log('percentage: ', percentage)
     // if (!editionId) return;
     const displayPercentage = percentage || 0; // percentage might be null when book first created
     setPercentage(displayPercentage);

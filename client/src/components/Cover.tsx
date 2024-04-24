@@ -9,7 +9,7 @@ interface CoverProps {
 const StyledLink = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
   margin: 10px 0;
 `;
 
@@ -39,6 +39,13 @@ const Square = styled.div`
 
 const Author = styled.div`
   font-weight: 300;
+`;
+
+const Title = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 20px;
 `;
 
 function Cover(props: CoverProps) {
@@ -75,7 +82,7 @@ function Cover(props: CoverProps) {
           Book
         </Square>
         </CoverWrapper>
-        {title || "Unkown"}
+        <Title>{title || "Unkown"}</Title>
         <Author>{author}</Author>
     </StyledLink>
   )

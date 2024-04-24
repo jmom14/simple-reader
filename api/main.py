@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from routers.users import router as users_rotuer
 from routers.auth import router as auth_router
 from routers.reading import router as reading_router
+from routers.highlight import router as highlight_router
+from routers.note import router as note_router
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
@@ -31,3 +33,5 @@ async def root():
 app.include_router(users_rotuer)
 app.include_router(auth_router)
 app.include_router(reading_router)
+app.include_router(highlight_router)
+app.include_router(note_router)

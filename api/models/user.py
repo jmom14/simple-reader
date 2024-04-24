@@ -18,3 +18,4 @@ class User(Base):
 
     readings = relationship("Reading", back_populates="user")
     highlights = relationship("Highlight", back_populates="user")
+    notes = relationship("Note", back_populates="user")

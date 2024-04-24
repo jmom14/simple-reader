@@ -17,13 +17,12 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", response_model=List[schemas.Reading])
 async def read_readings(
   user: Annotated[schemas.User, Depends(services.get_current_active_user)],
   db: Session = Depends(get_db)
 ):
-  readings = services.get_readings(db=db, user_id=user.id)
-  return {"readings": readings}
+  return services.get_readings(db=db, user_id=user.id)
 
 
 @router.post("/")

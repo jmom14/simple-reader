@@ -16,4 +16,5 @@ class Reading(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="readings")
 
-    highlights = relationship("Highlight", back_populates="readings")
+    highlights = relationship("Highlight", back_populates="reading")
+    notes = relationship("Note", back_populates="reading")

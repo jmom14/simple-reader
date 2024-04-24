@@ -1,8 +1,8 @@
 import React from 'react';
-import Cover from '../components/Cover';
+import Cover from '../Cover';
 import styled from 'styled-components';
-import { useFetchReadingsQuery } from '../app/services/readings';
-import Loading from '../components/Loading';
+import { useFetchReadingsQuery } from '../../app/services/readings';
+import Loading from '../Loading';
 
 const BooksContainer = styled.div`
   display: grid;
@@ -10,7 +10,7 @@ const BooksContainer = styled.div`
   gap: 20px;
   align-items: flex-start;
   justify-content: center;
-  padding: 0 50px;
+  padding: 0 120px;
 `;
 
 const Title = styled.h1`
@@ -20,7 +20,7 @@ const Title = styled.h1`
 const Wrapper = styled.div``;
 
 function Library() {
-  const { data, isLoading } = useFetchReadingsQuery();
+  const { data = [], isLoading } = useFetchReadingsQuery();
 
   if (isLoading){
     return <Loading /> 
@@ -30,7 +30,7 @@ function Library() {
     <Wrapper>
       <Title>Library</Title>
       <BooksContainer>
-        {data?.readings?.map((reading: any) => <Cover key={reading.id} reading={reading} />)}
+        {data.map((reading: any) => <Cover key={reading.id} reading={reading} />)}
       </BooksContainer>
     </Wrapper>
   )
