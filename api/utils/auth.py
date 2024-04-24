@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Union
 from jose import jwt
 from sqlalchemy.orm import Session
+from exception import UserNotRegisteredError, IncorrectPasswordError
 
 import os
 import services
@@ -25,9 +26,9 @@ def get_password_hash(password):
 def authenticate_user(db: Session, email: str, password: str):
     db_user = services.get_user_by_email(db=db, email=email)
     if not db_user:
-        return False
+        raise UserNotRegisteredError
     if not verify_password(password, db_user.password):
-        return False
+        raise IncorrectPasswordError
     return db_user
 
 

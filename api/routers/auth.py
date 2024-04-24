@@ -7,6 +7,7 @@ from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
 from database import get_db
 from sqlalchemy.orm import Session
+from exception import UserNotRegisteredError, IncorrectPasswordError
 
 import schemas
 import os
@@ -39,13 +40,21 @@ async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db)
 ):
-    user = authenticate_user(db=db, email=form_data.username, password=form_data.password)
-    if not user:
+    try:
+        user = authenticate_user(db=db, email=form_data.username, password=form_data.password)
+    except UserNotRegisteredError:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not registered",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    except IncorrectPasswordError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        
     return get_token(user.email)
 
 
