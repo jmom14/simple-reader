@@ -13,8 +13,6 @@ import Unauthorized from './components/pages/Unauthorized';
 
 function App() {
 
-  console.log('env: ', process.env.NODE_ENV)
-
   return (
     <div style={{ height: '100vh'}}>
       <Routes>
