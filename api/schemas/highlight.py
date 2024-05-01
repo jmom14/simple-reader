@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Union
+from typing import Optional
 from datetime import datetime
 
 class HighlightCreate(BaseModel):
@@ -15,3 +15,4 @@ class Highlight(BaseModel):
     created_at: datetime
     reading_id: int
     user_id: int
+    reading_title: Optional[str] = None

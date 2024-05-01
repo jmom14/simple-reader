@@ -7,9 +7,8 @@ import { File } from '../../constants';
 import { MdCancel } from "react-icons/md";
 import { useCreateReadingMutation } from '../../app/services/readings';
 import EPub from 'epubjs';
-import { toast, Bounce } from 'react-toastify';
 import Loading from '../Loading';
-
+import { showErrorToast, showSuccessToast } from '../../utils/toast';
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,6 +63,7 @@ const Title = styled.h1`
 interface EpubMetadata {
   title: string,
   author: string,
+  cover?: Blob,
 }
 
 function Upload() {
@@ -73,32 +73,11 @@ function Upload() {
 
   useEffect(() => {
     if(isSuccess){
-      toast.success('Epub uploaded successfully!', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      showSuccessToast('Epub uploaded successfully')
       setFile(null)
     }
-  
     if(isError){
-      toast.error('An error has occurred!', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      showErrorToast('An error has occurred!');
     }
   }, [isError, isSuccess])
 
@@ -106,32 +85,12 @@ function Upload() {
     const acceptedFile = acceptedFiles[0];
 
     if (!acceptedFile){
-      toast.error('An error has occurred! File to upload is empty', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      showErrorToast('An error has occurred! File to upload is empty');
       return;
     }
 
     if (acceptedFile.type !== 'application/epub+zip') {
-      toast.error('File format is incorrect', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      showErrorToast('File format is incorrect');     
       return;
     }
 
@@ -144,13 +103,24 @@ function Upload() {
           return;
         }
         book.open(reader.result);
-        book.loaded.metadata.then((meta) => {
-          setEpubMetadata({
-            title: meta.title.trim() || suggestedName,
-            author: meta.creator
-          })
-          setFile(acceptedFiles[0]);
-        });
+        book.coverUrl().then(async (coverUrl) => {
+          if (coverUrl){
+            const response = await fetch(coverUrl);
+            const blob = await response.blob();
+            return blob;
+          }
+          return null;
+        }).then((cover: any) => {
+          book.loaded.metadata.then((meta) => {
+            setFile(acceptedFiles[0]);
+            setEpubMetadata({
+              title: meta.title.trim() || suggestedName,
+              author: meta.creator,
+            ...(cover ? { cover } : {})
+            });
+          });
+        })
+        
       };
       reader.readAsArrayBuffer(acceptedFile);
     };
@@ -163,7 +133,7 @@ function Upload() {
       title: epubMetadata.title,
       author: epubMetadata.author
     }
-    createReading({ file, reading: JSON.stringify(reading) });
+    createReading({ file, cover: epubMetadata.cover, reading: JSON.stringify(reading) });
   }
 
   const handleCancelClick = (e: any) => {

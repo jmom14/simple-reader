@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { MdOutlineNavigateNext, MdOutlineNavigateBefore } from "react-icons/md";
 import ReaderFooter from './ReaderFooter';
 import HighlightPopover from './popovers/HightlightPopover';
-import { showSuccessToast } from '../utils/toast';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 import TranslatePopover from './popovers/TranslatePopover';
 import NotePopover from './popovers/NotePopover';
 import { useCreteaHighlightMutation } from '../app/services/highlights';
@@ -47,7 +47,7 @@ export default function EpubReader(props: EpubReaderProps) {
   const [rendition, setRendition] = useState<any>();
   const [popover, setPopover] = useState<any>(null);
   const { bookPath, percentage, onLocationChanged, onLocationsGenerated} = props;
-  const [ createHighlight ] = useCreteaHighlightMutation();
+  const [ createHighlight, result ] = useCreteaHighlightMutation();
   const [ createNote ] = useCreteaNoteMutation();
   let { id: readingId } = useParams();
 
@@ -163,8 +163,7 @@ export default function EpubReader(props: EpubReaderProps) {
       return;
     }
     const selectionRange = selection.getRangeAt(0);
-    const cfiRange = createCfi(selectionRange, contents.cfiBase);
-    console.log(selection.toString())
+    const cfiRange = createCfi(selectionRange, contents.cfiBase);    
     const virtualElement = createVirtualElement(rendition, contents, selectionRange);
     setPopover({reference: virtualElement, cfi: cfiRange, text: selection.toString(), type: "highlight"})
   }, [rendition]);
@@ -192,10 +191,15 @@ export default function EpubReader(props: EpubReaderProps) {
       text: popover.text,
       reading_id: readingId,
     }).then((response: any) => {
-      if(response && response.data)
-      rendition.annotations.highlight(popover.cfi);
-      showSuccessToast("Highlight created successfully!")
-    }).catch(error => {
+      if(response && response.data){
+        rendition.annotations.highlight(popover.cfi);
+        showSuccessToast("Highlight created successfully!");
+      }
+    },
+    (error) => {
+      showErrorToast('Error creating highlight')
+    }
+  ).catch(error => {
       console.log(error);
     }).finally(() => {
       setPopover(null);

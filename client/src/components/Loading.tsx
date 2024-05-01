@@ -1,16 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Loader = styled.div`
+const Loader = styled.div<{ color?: string}>`
   margin: 5px auto;
   text-align: center;
-  display: flex;
 
   & > div {
     width: 15px;
     height: 15px;
-    background-color: white;
-
+    background-color: ${props => props.color || 'white'};
     border-radius: 100%;
     display: inline-block;
     -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
@@ -42,14 +40,18 @@ const Loader = styled.div`
     }
   }`;
 
+interface LoadingProps {
+  color?: string,
+}
 
-function Loading() {
+function Loading(props: LoadingProps) {
+  const { color } = props;
   return (
-    <Loader>
+    <Loader color={color}>
       <div className="bounce1"></div>
       <div className="bounce2"></div>
       <div className="bounce3"></div>
-  </Loader>
+    </Loader>
   )
 }
 

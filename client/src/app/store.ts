@@ -5,6 +5,7 @@ import { usersApi } from './services/users';
 import { readingsApi } from './services/readings';
 import { highglightsApi } from './services/highlights';
 import { notesApi } from './services/notes';
+import { translateApi } from './services/translate';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     [readingsApi.reducerPath]: readingsApi.reducer,
     [highglightsApi.reducerPath]: highglightsApi.reducer,
     [notesApi.reducerPath]: notesApi.reducer,
+    [translateApi.reducerPath]: translateApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
@@ -20,6 +22,7 @@ export const store = configureStore({
     .concat(usersApi.middleware)
     .concat(readingsApi.middleware)
     .concat(highglightsApi.middleware)
+    .concat(translateApi.middleware)
     .concat(notesApi.middleware),
 });
 

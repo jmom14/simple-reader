@@ -10,7 +10,6 @@ const CoverWrapper = styled.div<{ texture: string }>`
   align-items: center;
   justify-content: center;
   text-align: center;
-  cursor: pointer;
   background-size: cover;
 `;
 

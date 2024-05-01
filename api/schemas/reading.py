@@ -8,6 +8,7 @@ class Reading(BaseModel):
     title: str
     author: str
     file: str
+    cover_image_file: Optional[str] = None
 
 
 class ReadingCreate(BaseModel):

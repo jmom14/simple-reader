@@ -1,13 +1,13 @@
 from pydantic import BaseModel
-from typing import Union
+from typing import Union, Optional
 from schemas.auth import Token
 
 
 class User(BaseModel):
     id: int
     email: str
-    first_name: Union[str, None] = None
-    last_name: Union[str, None] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     is_disabled: bool
 
     class Config:

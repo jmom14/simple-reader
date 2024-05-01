@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 import services
 import schemas 
 from typing import List
-
+from pydantic import TypeAdapter
 
 router = APIRouter(
   prefix="/api/notes", 
@@ -18,8 +18,10 @@ async def read_notes(
     reading_id: int,
     user: Annotated[schemas.User, Depends(services.get_current_active_user)],
     db: Session = Depends(get_db),
-):
-    return services.get_notes(db=db, user_id=user.id, reading_id=reading_id)
+):  
+    q = services.get_notes(db=db, user_id=user.id, reading_id=reading_id)
+    items = TypeAdapter(List[schemas.Note]).validate_python(q)
+    return items
 
 
 @router.post("/", response_model=schemas.Note)

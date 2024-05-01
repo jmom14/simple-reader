@@ -1,7 +1,7 @@
 import React from 'react';
 import Cover from '../Cover';
 import styled from 'styled-components';
-import { useFetchReadingsQuery } from '../../app/services/readings';
+import { useGetReadingsQuery } from '../../app/services/readings';
 import Loading from '../Loading';
 
 const BooksContainer = styled.div`
@@ -20,7 +20,7 @@ const Title = styled.h1`
 const Wrapper = styled.div``;
 
 function Library() {
-  const { data = [], isLoading } = useFetchReadingsQuery();
+  const { data = [], isLoading } = useGetReadingsQuery();
 
   if (isLoading){
     return <Loading /> 

@@ -16,3 +16,4 @@ class Note(BaseModel):
     created_at: datetime
     reading_id: int
     user_id: int
+    reading_title: str

@@ -17,11 +17,12 @@ export const readingsApi = createApi({
   reducerPath: 'readingsAPI',
   baseQuery: (args, api, extra) =>  baseQueryInterceptor(args, api, extra, baseQuery),
   endpoints: (builder) => ({
-    fetchReadings: builder.query<any, void>({ query: () => '/' }),
+    getReadings: builder.query<any, void>({ query: () => '/' }),
     createReading: builder.mutation<any, any>({
-      query: ({ file,reading }) => {
+      query: ({ file, reading, cover }) => {
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("cover", cover);
         formData.append("reading", reading);
         return {
           method: 'POST',
@@ -32,4 +33,4 @@ export const readingsApi = createApi({
   })
 });
 
-export const { useCreateReadingMutation, useFetchReadingsQuery } = readingsApi;
+export const { useCreateReadingMutation, useGetReadingsQuery } = readingsApi;

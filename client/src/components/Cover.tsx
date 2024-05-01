@@ -12,6 +12,7 @@ const StyledLink = styled.div`
   flex-direction: column;
   gap: 5px;
   margin: 10px 0;
+  cursor: pointer;
 `;
 
 const Author = styled.div`

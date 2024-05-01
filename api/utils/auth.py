@@ -1,6 +1,6 @@
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-from typing import Union
+from typing import Optional
 from jose import jwt
 from sqlalchemy.orm import Session
 from exception import UserNotRegisteredError, IncorrectPasswordError
@@ -32,7 +32,7 @@ def authenticate_user(db: Session, email: str, password: str):
     return db_user
 
 
-def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta

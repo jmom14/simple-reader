@@ -25,11 +25,6 @@ const HighlightPopover = (props: HighlightPopoverProps) => {
       <Button onClick={handleTranslate}>Translate</Button>
       <Button onClick={handleAddNote}>Note</Button>
     </ButtonGroup>
-    // <div>
-    //   <button onClick={handleAddHighlight}>Highlight</button>
-    //   <button onClick={handleTranslate}>Translate</button>
-    //   <button onClick={handleAddNote}>Note</button>
-    // </div>
   );
   
 

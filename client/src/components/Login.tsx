@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -41,7 +41,6 @@ export const Footer = styled.div`
 const ForgotPassword = styled(Link)`
   text-align: right;
   font-size: 14px;
-  text-decoration: none;
 `;
 
 interface LoginProps {
@@ -52,13 +51,19 @@ interface LoginProps {
 const Login = (props: LoginProps) => {
   const { onSignupClick, onClose } = props;
   const [loginError, setLoginError] = useState("");
-  const [login, { isLoading}] = useLoginMutation();
+  const [login, { isLoading, isError }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // const handleSocialAuth = () => {
   //   window.location.href = 'http://localhost:8000/login';
   // };
+
+  useEffect(() => {
+    if(isError && !loginError){
+      setLoginError('Network Error.')
+    }
+  }, [isError]);
 
   const onSubmit = async (formValue: any) => {
     try {

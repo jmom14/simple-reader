@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import Popover from './Popover';
 import styled from 'styled-components';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { FaArrowRight } from "react-icons/fa6";
+import { useTranslateQuery } from '../../app/services/translate';
+import Loading from '../Loading';
 
 
 const Wrapper = styled.div`
@@ -41,37 +43,51 @@ interface TranslatePopoverProps {
 }
 
 function TranslatePopover(props: TranslatePopoverProps) {
+  const [selectedLanguage, setSelectedLanguage] = useState("es");
   const { text, reference, onHide } = props;
+  const { data = {}, isLoading } = useTranslateQuery({ text: text, lang_to: selectedLanguage });
+
+  useEffect(() => {
+    if(data && data.language_to_code){
+      setSelectedLanguage(data.language_to_code);
+    }
+  }, [data])
+  
+  const { 
+    language_from, 
+    language_from_code, 
+    text_to
+  } = data;
 
   const content = (
     <Wrapper>
       <Title>Translate</Title>
-      <Text>{text}</Text>
+      <Text>{isLoading ? <Loading color="gray" />: text_to}</Text>
       <ButtonsContainer>
       <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value="en"
-          label="From"
           onChange={() => {}}
           size='small'
         >
-          <MenuItem value="en">English</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value={language_from_code}>{language_from}</MenuItem>
         </Select>
         <FaArrowRight />
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value="es"
-          label="To"
-          onChange={() => {}}
+          value={selectedLanguage}
+          onChange={(e) => setSelectedLanguage(e.target.value)}
           size='small'
         >
-          <MenuItem value="es">Spanish</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value="es">spanish</MenuItem>
+          <MenuItem value="en">english</MenuItem>
+          <MenuItem value="fr">french</MenuItem>
+          <MenuItem value="pt">portuguese</MenuItem>
+          <MenuItem value="ar">arabic</MenuItem>
+          <MenuItem value="ru">russian</MenuItem>
+          <MenuItem value="zh-cn">chinese (simplified)</MenuItem>
         </Select>
       </ButtonsContainer>
     </Wrapper>
