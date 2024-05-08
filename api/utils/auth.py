@@ -9,8 +9,8 @@ import os
 import services
 
 
-SECRET_KEY = os.environ.get('AUTH_SECRET_KEY')
-ALGORITHM = os.environ.get('AUTH_ALGORITHM')
+SECRET_KEY = os.environ.get("AUTH_SECRET_KEY")
+ALGORITHM = os.environ.get("AUTH_ALGORITHM")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

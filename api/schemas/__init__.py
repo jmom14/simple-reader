@@ -2,3 +2,4 @@ from .user import User, UserCreate, UserPrivate, UserLogin, UserToken, UserUpdat
 from .reading import ReadingCreate, Reading
 from .highlight import HighlightCreate, Highlight
 from .note import NoteCreate, Note
+from .translation import Translation, TranslationCreate, SimpleTranslation

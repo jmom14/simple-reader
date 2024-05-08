@@ -18,3 +18,4 @@ class Reading(Base):
 
     highlights = relationship("Highlight", back_populates="reading")
     notes = relationship("Note", back_populates="reading")
+    translations = relationship("Translation", back_populates="reading")

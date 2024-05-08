@@ -18,7 +18,12 @@ export const highglightsApi = createApi({
   reducerPath: 'highglightsAPI',
   baseQuery: (args, api, extra) =>  baseQueryInterceptor(args, api, extra, baseQuery),
   endpoints: (builder) => ({
-    getHighlights: builder.query<any, any>({ query: (readingId: number) => `${readingId}/`}),
+    getHighlights: builder.query<any, any>({ 
+      query: (request) => ({
+        url: '/',
+        params: request,
+      })
+    }),
     creteaHighlight: builder.mutation<any, any>({
       query: (request) => {
         return {

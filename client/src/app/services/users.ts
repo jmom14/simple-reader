@@ -5,7 +5,7 @@ import { HOST, baseQueryInterceptor } from './interceptor';
 const baseQuery = fetchBaseQuery({
   baseUrl: `${HOST}/api/users/`,
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.token;
+    const token = (getState() as RootState).auth.token || localStorage.getItem("token");
     if (token) {
       headers.set('authorization', `Bearer ${token}`)
     }
@@ -15,7 +15,7 @@ const baseQuery = fetchBaseQuery({
 
 export const usersApi = createApi({
   reducerPath: 'usersAPI',
-  baseQuery: (args, api, extra) =>  baseQueryInterceptor(args, api, extra, baseQuery),
+  baseQuery: (args, api, extra) => baseQueryInterceptor(args, api, extra, baseQuery),
   endpoints: (builder) => ({
     getUser: builder.query<any, void>({
       query: () => '/me/',

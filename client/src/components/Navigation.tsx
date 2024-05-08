@@ -4,9 +4,9 @@ import { FaBookOpen } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
 import { MdAccountCircle } from "react-icons/md";
 import Button from '@mui/material/Button';
-import {  Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import LoginModal from './LoginModal';
-import useIsAuthenticated from '../hooks/isAutheticated';
+import useIsAuthenticated from '../hooks/useIsAutheticated';
 import UserAvatar from './UserAvatar';
 import Popover from './Popover';
 import MenuOptions from './MenuOptions';
@@ -79,7 +79,7 @@ function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const styleLink = ({ isActive }: {isActive: boolean}) => isActive ? { color: 'black'} : {};
+  const styleLink = ({ isActive }: { isActive: boolean }) => isActive ? { color: 'black' } : {};
 
   const handleLogout = () => {
     dispatch(removeCredentials());
@@ -90,7 +90,7 @@ function Navigation() {
     <AvatarPopover>
       <AvatarUsername>{`Hi, User`}</AvatarUsername>
       <MenuOptions>
-        <MenuOptions.Item icon={<MdAccountCircle size={30}/>} onClick={() => navigate('/account')}>My Account</MenuOptions.Item>
+        <MenuOptions.Item icon={<MdAccountCircle size={30} />} onClick={() => navigate('/account')}>My Account</MenuOptions.Item>
         <MenuOptions.Item icon={<IoMdSettings size={30} />} onClick={() => navigate('/account')}>Settings</MenuOptions.Item>
         <MenuOptions.Item icon={<IoLogInOutline size={30} />} onClick={handleLogout}>Sign out</MenuOptions.Item>
       </MenuOptions>
@@ -113,7 +113,7 @@ function Navigation() {
           <Item>
             <StyledLink to={`upload`} style={styleLink}>
               <Flex>
-                <MdFileUpload  size={20} />
+                <MdFileUpload size={20} />
                 Upload
               </Flex>
             </StyledLink>
@@ -121,7 +121,7 @@ function Navigation() {
           <Item>
             <StyledLink to={`my-content`} style={styleLink}>
               <Flex>
-                <MdAccountCircle  size={20} />
+                <MdAccountCircle size={20} />
                 My Content
               </Flex>
             </StyledLink>
@@ -129,35 +129,35 @@ function Navigation() {
           <Item>
             <StyledLink to={`account`} style={styleLink}>
               <Flex>
-                <MdAccountCircle  size={20} />
+                <MdAccountCircle size={20} />
                 Account
               </Flex>
             </StyledLink>
           </Item>
         </Items>
-        
-        <div style={{ width: '90px'}}>
-        {isAuthenticated 
-          ? (
-            <Popover
-              trigger="click"
-              content={menu}
-              isOpen={isShowingUserOptions}
-              onVisibilityChanged={setIsShowingUserOptions}
-          >
-            <UserAvatar username="NA" size={40} font={1.2} />
-          </Popover>
-        )  : (
-          <Button onClick={() => setIsModalOpen(true)} variant="contained">
-            Sign in
-          </Button>
-        )}
-       </div>
-      <LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />  
 
-    </Wrapper>
-    <Outlet />
-  </>
+        <div style={{ width: '90px' }}>
+          {isAuthenticated
+            ? (
+              <Popover
+                trigger="click"
+                content={menu}
+                isOpen={isShowingUserOptions}
+                onVisibilityChanged={setIsShowingUserOptions}
+              >
+                <UserAvatar username="NA" size={40} font={1.2} />
+              </Popover>
+            ) : (
+              <Button onClick={() => setIsModalOpen(true)} variant="contained">
+                Sign in
+              </Button>
+            )}
+        </div>
+        <LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+      </Wrapper>
+      <Outlet />
+    </>
   )
 }
 

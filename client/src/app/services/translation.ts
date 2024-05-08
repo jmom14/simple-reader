@@ -4,7 +4,7 @@ import { HOST, baseQueryInterceptor } from './interceptor';
 
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${HOST}/api/translate/`,
+  baseUrl: `${HOST}/api/translation/`,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
     if (token) {
@@ -20,14 +20,27 @@ export const translateApi = createApi({
   endpoints: (builder) => ({
     translate: builder.query<any, any>({ 
       query: (request) => {
-        console.log(request)
         return {
-          url: '',
+          url: '/translate',
           params: request,
+        }
+      }
+    }),
+    getTralations: builder.query<any, any>({
+      query: (request: number) => ({
+        url: '/',
+        params: request,
+      }),
+    }),
+    createTranslation: builder.mutation<any, any>({
+      query: (request) => {
+        return {
+          method: 'POST',
+          body: request,
         }
       }
     })
   }),
 });
 
-export const { useTranslateQuery } = translateApi;
+export const { useTranslateQuery, useCreateTranslationMutation, useGetTralationsQuery } = translateApi;

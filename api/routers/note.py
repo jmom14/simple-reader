@@ -13,7 +13,7 @@ router = APIRouter(
   responses={404: {"description": "Not found"}}
 )
 
-@router.get("/{reading_id}", response_model=List[schemas.Note])
+@router.get("/", response_model=List[schemas.Note])
 async def read_notes(
     reading_id: int,
     user: Annotated[schemas.User, Depends(services.get_current_active_user)],

@@ -5,7 +5,7 @@ from routers.auth import router as auth_router
 from routers.reading import router as reading_router
 from routers.highlight import router as highlight_router
 from routers.note import router as note_router
-from routers.translate import router as translate_router
+from routers.translation import router as translation_router
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
@@ -37,4 +37,4 @@ app.include_router(auth_router)
 app.include_router(reading_router)
 app.include_router(highlight_router)
 app.include_router(note_router)
-app.include_router(translate_router)
+app.include_router(translation_router)

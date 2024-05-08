@@ -10,6 +10,7 @@ import NotePopover from './popovers/NotePopover';
 import { useCreteaHighlightMutation } from '../app/services/highlights';
 import { useParams } from 'react-router-dom';
 import { useCreteaNoteMutation } from '../app/services/notes';
+import { useCreateTranslationMutation } from '../app/services/translation';
 
 const Viewer = styled.div`
   width: 1200px;
@@ -47,8 +48,10 @@ export default function EpubReader(props: EpubReaderProps) {
   const [rendition, setRendition] = useState<any>();
   const [popover, setPopover] = useState<any>(null);
   const { bookPath, percentage, onLocationChanged, onLocationsGenerated} = props;
-  const [ createHighlight, result ] = useCreteaHighlightMutation();
+  const [ createHighlight ] = useCreteaHighlightMutation();
   const [ createNote ] = useCreteaNoteMutation();
+  const [ createTranslation ]  = useCreateTranslationMutation();
+
   let { id: readingId } = useParams();
 
   useEffect(() => {
@@ -217,6 +220,16 @@ export default function EpubReader(props: EpubReaderProps) {
     }))
   };
 
+  const handleCreateTranslation = async (item: any) => {
+    if(!readingId){
+      return;
+    }
+    createTranslation({
+      ...item,
+      reading_id: readingId
+    })
+  }
+
   const handleCreateNote = (noteText: string) => {
     if(!rendition || !popover){
       return;
@@ -261,6 +274,7 @@ export default function EpubReader(props: EpubReaderProps) {
       text={popover.text}
       reference={popover.reference}
       onHide={() => setPopover(null)}
+      handleCreateTranslation={handleCreateTranslation}
     />
   )
 

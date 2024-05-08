@@ -8,17 +8,25 @@ from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 from schemas.auth import TokenData
 import os
-import schemas 
+import schemas
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
-SECRET_KEY = os.environ.get('AUTH_SECRET_KEY')
-ALGORITHM = os.environ.get('AUTH_ALGORITHM')
+SECRET_KEY = os.environ.get("AUTH_SECRET_KEY")
+ALGORITHM = os.environ.get("AUTH_ALGORITHM")
 
 
 def create_user(db: Session, user: schemas.User):
     new_user = User(email=user.email, password=get_password_hash(user.password))
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
+
+def create_social_user(db: Session, email: str):
+    new_user = User(email=email)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -37,7 +45,9 @@ def get_users(db: Session):
     return db.query(User).offset(0).limit(100).all()
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
+async def get_current_user(
+    token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)
+):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -57,20 +67,21 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
     return db_user
 
 
-async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]):
+async def get_current_active_user(
+    current_user: Annotated[User, Depends(get_current_user)]
+):
     if current_user.is_disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
 
 async def update_user(db, db_user, user_update):
-    attr_to_update = ['first_name', 'last_name']
+    attr_to_update = ["first_name", "last_name"]
 
     for key, value in user_update.items():
-            if key in attr_to_update:
-                setattr(db_user, key, value)
-    
+        if key in attr_to_update:
+            setattr(db_user, key, value)
+
     db.commit()
     db.refresh(db_user)
     return db_user
-

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import useIsAuthenticated from '../../hooks/isAutheticated';
+import useIsAuthenticated from '../../hooks/useIsAutheticated';
 import { useGetUserQuery, useUpdateUserMutation } from '../../app/services/users';
 import Loading from '../Loading';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
+import { showSuccessToast } from '../../utils/toast';
 
 const Title = styled.h1`
   text-align: center;
@@ -35,10 +36,10 @@ export default function Account() {
   });
   const isAuthenticated = useIsAuthenticated();
   const { data, isLoading } = useGetUserQuery();
-  const [ updateUser ] = useUpdateUserMutation();
+  const [updateUser, { isSuccess }] = useUpdateUserMutation();
 
   useEffect(() => {
-    if(data){
+    if (data) {
       setMe({
         firstName: data.first_name || '',
         lastName: data.last_name || '',
@@ -47,7 +48,13 @@ export default function Account() {
     }
   }, [data]);
 
-  if (!isAuthenticated){
+  useEffect(() => {
+    if (isSuccess) {
+      showSuccessToast('Edited Successfully!')
+    }
+  }, [isSuccess]);
+
+  if (!isAuthenticated) {
     return <div>You need to Login </div>
   }
 
@@ -57,62 +64,63 @@ export default function Account() {
       data: {
         first_name: me.firstName,
         last_name: me.lastName,
-      }}
+      }
+    }
     )
   };
-  
-  
+
+
   return (
     <Wrapper>
       <Title>Account Details</Title>
-    {isLoading 
-      ? <Loading /> 
-      : (
-      <Card>
-        <div style={{ width: '70%'}}>
-          <TextField
-            id="first_name"
-            label="First Name"
-            variant="outlined"
-            margin="normal"
-            value={me.firstName}
-            fullWidth={true}
-            onChange={e => setMe({...me, firstName: e.target.value})}
-          />
-        </div>
-        <div style={{ width: '70%'}}>
-          <TextField
-            id="last_name"
-            label="Last Name"
-            variant="outlined"
-            margin="normal"
-            value={me.lastName}
-            fullWidth={true}
-            onChange={e => setMe({...me, lastName: e.target.value})}
-          />
-        </div>
-        <div style={{ width: '70%'}}>
-          <TextField
-            id="email"
-            label="Email"
-            variant="outlined"
-            margin="normal"
-            value={me.email}
-            fullWidth={true}
-            disabled={true}
-          />
-        </div>
-        <div style={{ width: '70%', display: 'grid'}}>
-        <Button 
-            variant="contained" 
-            onClick={handleSave}
-            style={{ marginTop: '10px', justifySelf: 'flex-end'}}
-          >
-            Save
-          </Button>
-        </div>
-      </Card>
-    )}
+      {isLoading
+        ? <Loading />
+        : (
+          <Card>
+            <div style={{ width: '70%' }}>
+              <TextField
+                id="first_name"
+                label="First Name"
+                variant="outlined"
+                margin="normal"
+                value={me.firstName}
+                fullWidth={true}
+                onChange={e => setMe({ ...me, firstName: e.target.value })}
+              />
+            </div>
+            <div style={{ width: '70%' }}>
+              <TextField
+                id="last_name"
+                label="Last Name"
+                variant="outlined"
+                margin="normal"
+                value={me.lastName}
+                fullWidth={true}
+                onChange={e => setMe({ ...me, lastName: e.target.value })}
+              />
+            </div>
+            <div style={{ width: '70%' }}>
+              <TextField
+                id="email"
+                label="Email"
+                variant="outlined"
+                margin="normal"
+                value={me.email}
+                fullWidth={true}
+                disabled={true}
+              />
+            </div>
+            <div style={{ width: '70%', display: 'grid' }}>
+              <Button
+                variant="contained"
+                onClick={handleSave}
+                style={{ marginTop: '10px', justifySelf: 'flex-end' }}
+              >
+                Save
+              </Button>
+            </div>
+          </Card>
+        )}
     </Wrapper>
   );
 }

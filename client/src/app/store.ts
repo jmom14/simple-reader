@@ -5,7 +5,7 @@ import { usersApi } from './services/users';
 import { readingsApi } from './services/readings';
 import { highglightsApi } from './services/highlights';
 import { notesApi } from './services/notes';
-import { translateApi } from './services/translate';
+import { translateApi } from './services/translation';
 
 export const store = configureStore({
   reducer: {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Cover from '../Cover';
 import styled from 'styled-components';
 import { useGetReadingsQuery } from '../../app/services/readings';
@@ -20,10 +20,14 @@ const Title = styled.h1`
 const Wrapper = styled.div``;
 
 function Library() {
-  const { data = [], isLoading } = useGetReadingsQuery();
+  const { data = [], isLoading, refetch } = useGetReadingsQuery();
 
-  if (isLoading){
-    return <Loading /> 
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (

@@ -144,7 +144,7 @@ function Upload() {
   return (
     <Wrapper>
       <Title>Upload epub File</Title>
-      <Dropzone onDrop={handleDrop} maxFiles={1}>
+      <Dropzone onDrop={handleDrop} maxFiles={1} accept={{'application/epub+zip': ['.epub']}}>
         {({getRootProps, getInputProps}) => {
           return(
             <StyledSection>

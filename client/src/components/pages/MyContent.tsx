@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useGetReadingsQuery } from '../../app/services/readings';
+import { useGetTralationsQuery } from '../../app/services/translation';
 
 const Title = styled.h1`
   align-self: flex-start;
@@ -39,11 +40,12 @@ const StyledTabs = styled(Tabs)`
 
 export default function MyContent() {
   const [readingOptions, setReadingOptions] = useState([]);
-  const [selectedReading, setSelectedReading] = useState("2");
+  const [selectedReading, setSelectedReading] = useState("0");
   const [value, setValue] = React.useState(0);
-  const { data: highlightsData = [], isLoading } = useGetHighlightsQuery(selectedReading);
-  const { data: notesData = [], isLoading: isNotesLoading } = useGetNotesQuery(selectedReading);
-  const { data: readingsNote = []} = useGetReadingsQuery();
+  const { data: highlightsData = [] } = useGetHighlightsQuery({ reading_id: selectedReading });
+  const { data: notesData = [] } = useGetNotesQuery({ reading_id: selectedReading });
+  const { data: readingsNote = [] } = useGetReadingsQuery();
+  const { data: translationsData = [] } = useGetTralationsQuery({ reading_id: selectedReading });
   
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
@@ -63,7 +65,7 @@ export default function MyContent() {
       case 0:
         return <HighlightsList highlights={highlightsData} />
       case 1:
-        return <TranslationsList />;
+        return <TranslationsList translations={translationsData} />;
       case 2:
           return <NotesList notes={notesData} />
       default:

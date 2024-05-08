@@ -11,6 +11,9 @@ import { useDispatch } from 'react-redux'
 import { setCredentials } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
+import { FaGoogle } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
+import { HOST } from '../app/services/interceptor';
 
 
 const initialValues = {
@@ -32,10 +35,17 @@ export const Content = styled.div`
 `;
 
 export const Footer = styled.div`
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   gap: 5px;
   justify-content: center;
+`;
+
+const Flex = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 `;
 
 const ForgotPassword = styled(Link)`
@@ -55,15 +65,11 @@ const Login = (props: LoginProps) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const handleSocialAuth = () => {
-  //   window.location.href = 'http://localhost:8000/login';
-  // };
-
   useEffect(() => {
-    if(isError && !loginError){
+    if (isError && !loginError) {
       setLoginError('Network Error.')
     }
-  }, [isError]);
+  }, [isError, loginError]);
 
   const onSubmit = async (formValue: any) => {
     try {
@@ -73,7 +79,7 @@ const Login = (props: LoginProps) => {
       onClose();
     } catch (error: any) {
       const { data } = error;
-      if (data && data.detail){
+      if (data && data.detail) {
         setLoginError(data.detail);
       }
     }
@@ -90,14 +96,29 @@ const Login = (props: LoginProps) => {
     formik.handleSubmit();
   }
 
+  const handleGoogleAuthClick = () => {
+    window.location.href = `${HOST}/api/auth/google`;
+  }
+
+  const handleFacebookAuthClick = () => {
+    console.log('Facebook auth...')
+  };
+
   return (
     <Content>
       <Title>Login to your account</Title>
       {loginError && <Alert severity="error">{loginError}</Alert>}
-      <TextField 
-        id="email" 
-        label="Email" 
-        variant="outlined" 
+      <Button variant="outlined" onClick={handleGoogleAuthClick} color='error'>
+        <Flex><FaGoogle /> Google</Flex>
+      </Button>
+      <Button variant="outlined" onClick={handleFacebookAuthClick}>
+        <Flex><FaFacebook />Facebook</Flex>
+      </Button>
+      <div style={{ textAlign: 'center' }}>or</div>
+      <TextField
+        id="email"
+        label="Email"
+        variant="outlined"
         onChange={(e) => formik.setFieldValue("email", e.target.value)}
         helperText={formik.errors.email}
         error={'email' in formik.errors}
@@ -112,10 +133,10 @@ const Login = (props: LoginProps) => {
         error={'password' in formik.errors}
       />
 
-      <Button 
-        variant="contained" 
+      <Button
+        variant="contained"
         onClick={handleLogin}
-        style={{ marginTop: '10px'}}
+        style={{ marginTop: '10px' }}
       >
         {isLoading ? <Loading /> : 'Login'}
       </Button>

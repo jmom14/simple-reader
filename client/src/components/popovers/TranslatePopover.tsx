@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import Popover from './Popover';
 import styled from 'styled-components';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { FaArrowRight } from "react-icons/fa6";
-import { useTranslateQuery } from '../../app/services/translate';
+import { useTranslateQuery } from '../../app/services/translation';
 import Loading from '../Loading';
+import Button from '@mui/material/Button';
 
 
 const Wrapper = styled.div`
@@ -39,12 +39,13 @@ const ButtonsContainer = styled.div`
 interface TranslatePopoverProps {
   text: string,
   reference: any,
-  onHide: () => void
+  onHide: () => void,
+  handleCreateTranslation: (item: any) => void,
 }
 
 function TranslatePopover(props: TranslatePopoverProps) {
   const [selectedLanguage, setSelectedLanguage] = useState("es");
-  const { text, reference, onHide } = props;
+  const { text, reference, handleCreateTranslation, onHide } = props;
   const { data = {}, isLoading } = useTranslateQuery({ text: text, lang_to: selectedLanguage });
 
   useEffect(() => {
@@ -55,9 +56,22 @@ function TranslatePopover(props: TranslatePopoverProps) {
   
   const { 
     language_from, 
-    language_from_code, 
+    language_from_code,
+    language_to,
+    language_to_code,
     text_to
   } = data;
+
+  const handleSave = () => {
+    handleCreateTranslation({
+      language_from,
+      language_from_code,
+      language_to,
+      language_to_code,
+      text_from: text,
+      text_to
+    });
+  };
 
   const content = (
     <Wrapper>
@@ -78,7 +92,7 @@ function TranslatePopover(props: TranslatePopoverProps) {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={selectedLanguage}
-          onChange={(e) => setSelectedLanguage(e.target.value)}
+          onChange={(e: SelectChangeEvent) => setSelectedLanguage(e.target.value)}
           size='small'
         >
           <MenuItem value="es">spanish</MenuItem>
@@ -89,6 +103,10 @@ function TranslatePopover(props: TranslatePopoverProps) {
           <MenuItem value="ru">russian</MenuItem>
           <MenuItem value="zh-cn">chinese (simplified)</MenuItem>
         </Select>
+      </ButtonsContainer>
+      <ButtonsContainer style={{ marginTop: '10px'}}>
+        <div />
+        <Button variant="contained" onClick={handleSave}>Save</Button>
       </ButtonsContainer>
     </Wrapper>
   );

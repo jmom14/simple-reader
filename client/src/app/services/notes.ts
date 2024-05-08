@@ -17,7 +17,12 @@ export const notesApi = createApi({
   reducerPath: 'notesAPI',
   baseQuery: (args, api, extra) =>  baseQueryInterceptor(args, api, extra, baseQuery),
   endpoints: (builder) => ({
-    getNotes: builder.query<any, any>({ query: (readingId: any) => `${readingId}/`}),
+    getNotes: builder.query<any, any>({ 
+      query: (request: any) => ({
+        url: '/',
+        params: request,
+      })
+    }),
     creteaNote: builder.mutation<any, any>({
       query: (request) => {
         return {
