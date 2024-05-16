@@ -137,6 +137,7 @@ celerybeat.pid
 env/
 venv/
 ENV/
+reader_env/
 env.bak/
 venv.bak/
 
