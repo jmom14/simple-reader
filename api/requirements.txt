@@ -14,7 +14,6 @@ Django==1.11.29
 EbookLib==0.18
 ecdsa==0.19.0
 fastapi==0.109.2
-# googletrans==4.0.0rc1
 h2==3.2.0
 hpack==3.0.0
 hstspreload==2024.5.1
@@ -57,3 +56,4 @@ typing==3.7.4.3
 typing_extensions==4.9.0
 uvicorn==0.27.1
 zipp==1.2.0
+azure-ai-translation-text==1.0.1

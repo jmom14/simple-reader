@@ -45,9 +45,8 @@ async def create_translation(
 async def translate(text: str, lang_to: str):
 
     try:
-        response = services.translation(text, lang_to)
+        response = services.translate(text, lang_to)
     except Exception as e:
-        print("error: ", e)
         raise TranslationError
 
     return response
